@@ -72,6 +72,7 @@ io.on('connection', (socket) => {
     });*/
 
     socket.on('disconnect', function (e) {
+
         console.log(e);
     });
 });

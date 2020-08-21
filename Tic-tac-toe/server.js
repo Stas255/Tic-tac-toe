@@ -56,9 +56,10 @@ io.on('connection', (socket) => {
             if (MapId.main == userId && MapId.CheckIsEmpty(data.idBlock)) {
                 MapId.AddInBlock(data.idBlock, userId);
                 if (MapId.CheckIsWin(data.idBlock)) {
-                    io.sockets.emit('finish_Map_' + data.idGame, { map: MapId, idUser: userId });
+                    MapId.winner = userId;
+                    io.sockets.emit('finish_Map_', { map: MapId, idUser: userId });
                 } else {
-                    io.sockets.emit('update_Map_' + data.idGame, { map: MapId });
+                    io.sockets.emit('update_Map_', { map: MapId });
                 }
             }
         }
@@ -67,7 +68,7 @@ io.on('connection', (socket) => {
     socket.on('gameIsStart', (data) => {
         if (Maps[data.idGame].IsStart()) {
             var MapId = Maps[data.idGame];
-            io.sockets.emit('start_Map_' + data.idGame, { map: MapId });
+            io.sockets.emit('start_Map_', { map: MapId });
         }
     });
 

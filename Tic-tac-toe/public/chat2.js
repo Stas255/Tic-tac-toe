@@ -80,7 +80,7 @@ $(function () {
     };
 
     //socket
-    socket.on('update_Map_' + idGame, data => {
+    socket.on('update_Map_', data => {
         GameInfo = data.map;
         whichMove(data.map);
         UpdateMap(data);
@@ -90,7 +90,7 @@ $(function () {
         }
     });
 
-    socket.on('start_Map_' + idGame, data => {
+    socket.on('start_Map_', data => {
         GameInfo = data.map;
         UpdateMap(data);
         lines.visible = true; //grid
@@ -104,13 +104,15 @@ $(function () {
         }
     });
 
-    socket.on('finish_Map_' + idGame, data => {
+    socket.on('finish_Map_', data => {
         GameInfo = data.map;
         UpdateMap(data);
         NewGame(data);
     });
 
     function NewGame(data) {
+        console.log(data.map.winner);
+        console.log(idUser);
         if (data.map.winner == idUser) {
             $('.message').html("You win");
         } else {

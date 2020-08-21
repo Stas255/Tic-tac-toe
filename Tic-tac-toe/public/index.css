@@ -1,0 +1,22 @@
+html{
+  font-family: Helvetica;
+}
+
+input{
+  line-height: 40px;
+  font-size: 30px;
+  text-align: center;
+  float: left;
+  margin: 50px;
+  background-color: white;
+  border: 3px solid #705619;
+  border-radius: 5px;
+  width: 300px;
+}
+form{
+  display: inline-block;
+}
+
+.hidden{
+  visibility: hidden;
+}

@@ -1,0 +1,34 @@
+﻿<html>
+
+<!-- head -->
+<head>
+    <title>Lobby</title>
+</head>
+
+<!-- body -->
+<body>
+
+    <!-- html -->
+
+    <!-- include socket -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/chat.js"></script>
+    
+    <link rel="stylesheet" href="/index.css">
+    <!-- create socket -->
+
+    <div>
+        <form action="/createServer" method="get">
+            <input type="submit" name="name" value="Create Server" />
+        </form>
+    </div>
+
+    <input id="connectServer" type="button" value="Connect Server" />
+    <form action="/game/:id" method="get">
+            <input id="input" class="hidden" type="text" name="" placeholder="Enter the ID" >
+    </form>
+
+</body>
+
+</html>

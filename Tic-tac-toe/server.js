@@ -64,12 +64,12 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('gameIsStart', (data) => {
+    /*socket.on('gameIsStart', (data) => {
         if (Maps[data.idGame].IsStart()) {
             var MapId = Maps[data.idGame];
             io.sockets.emit('start_Map_' + data.idGame, { map: MapId });
         }
-    });
+    });*/
 
     socket.on('disconnect', function (e) {
         console.log(e);

@@ -4,6 +4,8 @@ const session = require('express-session');
 var io = require('socket.io')(http);
 var express = require('express');
 
+const start = Date.now();
+var time;
 app.set("view engine", "hbs");
 
 app.use(express.static('public'));
@@ -48,8 +50,9 @@ app.post('/GetSessionId', function (req, res) {
 // socket connect 
 io.on('connection', (socket) => {
     console.log("New user connected");
-
+    Message("New user connected", null);
     socket.on('click', (data) => {
+        Message("Click", data);
         if (Maps[data.idGame]) {
             var MapId = Maps[data.idGame];
             var userId = data.idUser;
@@ -58,8 +61,10 @@ io.on('connection', (socket) => {
                 if (MapId.CheckIsWin(data.idBlock)) {
                     MapId.winner = userId;
                     io.sockets.emit('finish_Map_', { map: MapId, idUser: userId });
+                    Message('finish_Map_', MapId);
                 } else {
                     io.sockets.emit('update_Map_', { map: MapId });
+                    Message('update_Map_', MapId);
                 }
             }
         }
@@ -69,13 +74,20 @@ io.on('connection', (socket) => {
         if (Maps[data.idGame].IsStart()) {
             var MapId = Maps[data.idGame];
             io.sockets.emit('start_Map_', { map: MapId });
+            Message('start_Map_', MapId);
         }
     });
 
     socket.on('disconnect', function (e) {
         console.log(e);
+        Message('disconnect');
     });
 });
+
+function Message(text, data) {
+    time = Date.now() - start;
+    io.sockets.emit('clientMessage', { message: text, miliseconds: time, map: data });
+}
 
 class Map {
     main;

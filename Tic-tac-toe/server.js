@@ -90,12 +90,9 @@ function Message(text, data) {
 }
 
 class Map {
-    main;
-    blocks = new Array(4);
-    step;
-    winner;
     constructor(id) {
         this.id = id;
+        this.blocks = new Array(4);
         for (var i = 0; i < 4; i++) {
             this.blocks[i] = new Array(4);
         }

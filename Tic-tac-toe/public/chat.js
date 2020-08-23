@@ -1,10 +1,6 @@
 $(function () {
 	var socket = io.connect('http://localhost:3000');
 
-	socket.on('clientMessage', message => {
-		console.log(message);
-	});
-
 	$("#connectServer").click( function () {
 	   $('.hidden').removeClass('hidden')
 	});

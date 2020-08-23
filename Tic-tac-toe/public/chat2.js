@@ -7,7 +7,7 @@ $(function () {
 
     var urlSplit = window.location.href.split('/');
     var idGame = urlSplit[urlSplit.length - 1];
-    var idUser;
+    var idUser, time;
 
     var blockSize = paper.view.size.width/ 3;
     var pointsArray = [];
@@ -29,6 +29,7 @@ $(function () {
     }
 
     var ClickRectangle = function (e) {
+        Message("User Click", null);
         var number = this.data.number;
         let request = new XMLHttpRequest();
         request.open("POST", "/GetSessionId", true);
@@ -43,6 +44,7 @@ $(function () {
                 idBlock: number
             };   
             socket.emit('click', data);
+            Message("Socket Emit Click", data);
         }), 5000);
         request.send();
     }
@@ -61,13 +63,11 @@ $(function () {
     }
 
         //socket
-        socket.on('clientMessage', message => {
-            console.log(message);
-        });
-
+        
         socket.on('update_Map_', data => {
             whichMove(data.map);
             UpdateMap(data);
+            Message("Socket Answer update_Map_", data.map);
             if (data.map.step == 9) {
                 $('.message').html("No one has won");
                 NewGame(data);
@@ -75,24 +75,27 @@ $(function () {
         });
 
         socket.on('start_Map_', data => {
-            UpdateMap(data);
-            lines.visible = true; //grid
-            loading.remove(); //circle
-            if (data.map.winner) {
-                NewGame(data);
-            } else {
-                $('#loading').css('visibility', 'hidden'); //text
-                $('.message').html("Game is started");
-                setTimeout(whichMove, 1000, data.map);
-            }
-        });
+                UpdateMap(data);
+                lines.visible = true; //grid
+                loading.remove(); //circle
+                Message("Socket Answer start_Map_", data.map);
+                if (data.map.winner) {
+                    NewGame(data);
+                } else {
+                    $('#loading').css('visibility', 'hidden'); //text
+                    $('.message').html("Game is started");
+                    setTimeout(whichMove, 1000, data.map);
+                }
+            });
 
         socket.on('finish_Map_', data => {
             UpdateMap(data);
             NewGame(data);
+            Message("Socket Answer finish_Map_", data.map);
         });
 
     function UpdateMap(data) {
+        Message("User Update Map", data.map);
         for (var i = 1; i <= 3; i++) {
             for (var j = 1; j <= 3; j++) {
                 if (data.map.blocks[i][j] == data.map.user1)
@@ -150,11 +153,13 @@ $(function () {
         setTimeout(request.addEventListener("load", function () {
             idUser = JSON.parse(request.response);
             socket.emit('gameIsStart', { idGame: idGame });
+            Message("Socket Emit gameIsStart", {idUser, idGame});
         }), 5000);
         request.send();
     }
 
     function NewGame(data) {
+        Message("User New Game", data.map);
         if (data.map.winner == idUser) {
             $('.message').html("You win");
         } else {
@@ -180,6 +185,26 @@ $(function () {
         fillColor: '#F3F0D1',
         strokeWidth: 1
     };
+
+        function GetTime() {
+            var date = new Date();
+            var h = addZero(date.getHours(), 2);
+            var m = addZero(date.getMinutes(), 2);
+            var s = addZero(date.getSeconds(), 2);
+            var ms = addZero(date.getMilliseconds(), 3);
+            time = h + ":" + m + ":" + s + ":" + ms;
+        }
+        function addZero(x, n) {
+            while (x.toString().length < n) {
+                x = "0" + x;
+            }
+            return x;
+        }
+
+        function Message(text, data) {
+            GetTime();
+            console.log({ text, time, data });        
+        }
 });
 
 

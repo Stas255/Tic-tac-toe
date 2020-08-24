@@ -1,5 +1,5 @@
 $(function () {
-	var socket = io.connect('http://localhost:3000');
+	var socket = io('ws://odz.tolstonozhenko.com.ua', { transports: ['websocket'] };
 
 	$("#connectServer").click( function () {
 	   $('.hidden').removeClass('hidden')

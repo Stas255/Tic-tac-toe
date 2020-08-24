@@ -3,7 +3,7 @@ $(function () {
     paper.install(window);
     paper.setup("myCanvas");
 
-    var socket = io.connect();
+    var socket = io('ws://odz.tolstonozhenko.com.ua', { transports: ['websocket'] };
 
     var urlSplit = window.location.href.split('/');
     var idGame = urlSplit[urlSplit.length - 1];

@@ -3,6 +3,8 @@ var http = require('http').createServer(app);
 const session = require('express-session');
 var io = require('socket.io')(http);
 var express = require('express');
+var $ = require("jquery");
+
 
 app.set("view engine", "hbs");
 

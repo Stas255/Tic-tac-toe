@@ -1,5 +1,4 @@
 $(function () {
-	var socket = io('ws://odz.tolstonozhenko.com.ua', { transports: ['websocket'] };
 
 	$("#connectServer").click( function () {
 	   $('.hidden').removeClass('hidden')

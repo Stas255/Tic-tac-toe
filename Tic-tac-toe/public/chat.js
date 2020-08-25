@@ -1,11 +1,8 @@
 $(function () {
 
-	//var socket = io('ws://odz.tolstonozhenko.com.ua:3000', { transports: ['websocket'] });
-	var socket = io();
-	socket.on('connect', function () {
-		console.log('connected!');
+	socket.on('disconnect', () => {
+		socket.emit('rec', socket.id);
 	});
-
 
 	$("#connectServer").click( function () {
 	   $('.hidden').removeClass('hidden')

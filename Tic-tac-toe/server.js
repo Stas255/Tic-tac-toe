@@ -7,12 +7,12 @@ var io = require('socket.io')(http);
 var express = require('express');
 var $ = require("jquery");
 
-
 app.set("view engine", "hbs");
 
 app.use(express.static('public'));
+var Maps = new Map();
 
-var Maps = [];
+//var Maps = new Maps();
 
 app.use(session({
     secret: 'ssshhhhh',
@@ -25,19 +25,16 @@ app.get('/', function (req, res) {
 });
 
 app.get('/createServer', function (req, res) {
-    var rand = Math.floor(Math.random() * 101);
-    if (!Maps[rand]) {
-        Maps[rand] = new Map(rand);
-        Maps[rand].AddUser(req.session.id);
+    var rand = Math.floor(Math.random() * 2).toString();
+    if (!Maps.has(rand)) {
+        Maps.set(rand, new GameMap());
     }
     res.redirect('/game/' + rand);
 });
 
 app.get('/game/:id', function (req, res) {
     var rand = req.params.id;
-    if (Maps[rand]) {
-        console.log("connect ok");
-        Maps[rand].AddUser(req.session.id);
+    if (Maps.has(rand)) {
         res.render("index2");
     } else {
         res.redirect('/');
@@ -51,10 +48,21 @@ app.post('/GetSessionId', function (req, res) {
 
 // socket connect 
 io.on('connection', (socket) => {
-    console.log("New user connected");
+    console.log("New user connected: " + socket.id);
+
+    socket.on('new_user', (data) => {
+        if (Maps.has(data.idGame)) {
+            Maps.get(data.idGame).AddUser(data.idUser, socket.id);
+            if (Maps.get(data.idGame).IsStart()) {
+                var MapId = Maps.get(data.idGame);
+                io.sockets.emit('start_Map_', { map: MapId });
+            }
+        }
+    });
+
     socket.on('click', (data) => {
-        if (Maps[data.idGame]) {
-            var MapId = Maps[data.idGame];
+        if (Maps.has(data.idGame)) {
+            var MapId = Maps.get(data.idGame);
             var userId = data.idUser;
             if (MapId.main == userId && MapId.CheckIsEmpty(data.idBlock)) {
                 MapId.AddInBlock(data.idBlock, userId);
@@ -68,19 +76,24 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('gameIsStart', (data) => {
-        if (Maps[data.idGame].IsStart()) {
-            var MapId = Maps[data.idGame];
-            io.sockets.emit('start_Map_', { map: MapId });
-        }
+    socket.on('rec', function (e) {
+        console.log("New user reconect: " + e);
     });
 
     socket.on('disconnect', function (e) {
-        console.log(e);
+        var url = socket.handshake.headers.referer;
+        var urlSplit = url.split('/');
+        var idGame = urlSplit[urlSplit.length - 1];
+        Maps.get(idGame).Disconect(socket.id);
+        if (Maps.get(idGame).IsDisconect()) {
+            Maps.delete(idGame);
+            console.log("Game: " + idGame + " is delete");
+        }
+        console.log("user disconnect: " + socket.id);
     });
 });
 
-class Map {
+class GameMap {
     constructor(id) {
         this.id = id;
         this.blocks = new Array(4);
@@ -94,13 +107,36 @@ class Map {
         }
     }
 
-    AddUser(userId) {
+    IsDisconect() {
+        return (this.user1SocketConnect == false || this.user1SocketConnect == undefined)
+            && (this.user2SocketConnect == false || this.user2SocketConnect == undefined);
+    }
+
+    Disconect(socketId) {
+        if (this.user1Socket == socketId) {
+            this.user1SocketConnect = false;
+        }
+        if (this.user2Socket == socketId) {
+            this.user2SocketConnect = false;
+        }
+    }
+
+    IsUser(socketId) {
+        return this.user1Socket == socketId || this.user2Socket == socketId;
+    }
+
+    AddUser(userId, socketId) {
+
         if (!this.user1) {
             this.user1 = userId;
             this.user1Name = "X";
+            this.user1Socket = socketId;
+            this.user1SocketConnect = true;
         } else if (!this.user2 && userId != this.user1) {
             this.user2 = userId;
             this.user2Name = "O";
+            this.user2Socket = socketId;
+            this.user2SocketConnect = true;
             this.Start();
         }
     }

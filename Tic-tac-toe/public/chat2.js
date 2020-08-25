@@ -1,17 +1,19 @@
 $(function () {
-
+    var idUser, time;
+    if (!idUser) StartGame();
+    var urlSplit = window.location.href.split('/');
+    var idGame = urlSplit[urlSplit.length - 1];
     paper.install(window);
     paper.setup("myCanvas");
 
     //var socket = io('ws://odz.tolstonozhenko.com.ua:3000', { transports: ['websocket'] });
     var socket = io();
     socket.on('connect', function () {
-        console.log('connected!');
+        socket.emit("new_user", {
+            idUser: idUser,
+            idGame: idGame
+        });
     });
-
-    var urlSplit = window.location.href.split('/');
-    var idGame = urlSplit[urlSplit.length - 1];
-    var idUser, time;
 
     var blockSize = paper.view.size.width/ 3;
     var pointsArray = [];
@@ -148,7 +150,6 @@ $(function () {
         }
     };
 
-    if (!idUser) StartGame();
 
     function StartGame() {
         let request = new XMLHttpRequest();

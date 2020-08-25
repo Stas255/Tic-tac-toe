@@ -1,6 +1,8 @@
 var app = require('express')();
 var http = require('http').createServer(app);
 const session = require('express-session');
+//app.use(expressStatusMonitor({ websocket: io, port: app.get('port') })); 
+http.listen(3000, () => console.log("Server is running"));
 var io = require('socket.io')(http);
 var express = require('express');
 var $ = require("jquery");
@@ -147,4 +149,3 @@ class Map {
     }
 }
 
-var server = http.listen("3000", () => console.log("Server is running"));

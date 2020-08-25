@@ -3,8 +3,8 @@ $(function () {
     paper.install(window);
     paper.setup("myCanvas");
 
-    var socket = io('ws://odz.tolstonozhenko.com.ua', { transports: ['websocket'] });
-
+    //var socket = io('ws://odz.tolstonozhenko.com.ua:3000', { transports: ['websocket'] });
+    var socket = io();
     socket.on('connect', function () {
         console.log('connected!');
     });

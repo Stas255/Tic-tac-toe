@@ -100,6 +100,10 @@ $(function () {
             Message("Socket Answer finish_Map_", data.map);
         });
 
+        socket.on('message', data => {
+            console.log(data);
+        })
+
     function UpdateMap(data) {
         Message("User Update Map", data.map);
         for (var i = 1; i <= 3; i++) {

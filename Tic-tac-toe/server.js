@@ -49,6 +49,7 @@ app.post('/GetSessionId', function (req, res) {
 // socket connect 
 io.on('connection', (socket) => {
     console.log("New user connected: " + socket.id);
+    io.sockets.emit('message', "NEW USER CONNECTED: " + socket.id)
 
     socket.on('new_user', (data) => {
         if (Maps.has(data.idGame)) {
@@ -71,14 +72,15 @@ io.on('connection', (socket) => {
                     io.sockets.emit('finish_Map_', { map: MapId, idUser: userId });
                 } else {
                     io.sockets.emit('update_Map_', { map: MapId });
+                   
                 }
             }
         }
     });
 
-    socket.on('rec', function (e) {
-        console.log("New user reconect: " + e);
-    });
+    //socket.on('rec', function (e) {
+    //    console.log("New user reconect: " + e);
+    //});
 
     socket.on('disconnect', function (e) {
         var url = socket.handshake.headers.referer;
@@ -88,8 +90,10 @@ io.on('connection', (socket) => {
         if (Maps.get(idGame).IsDisconect()) {
             Maps.delete(idGame);
             console.log("Game: " + idGame + " is delete");
+            io.sockets.emit('message', "GAME: " + idGame + " IS DELETED");
         }
         console.log("user disconnect: " + socket.id);
+        io.sockets.emit('message', 'USER DISCONNECTED ' + socket.id);
     });
 });
 

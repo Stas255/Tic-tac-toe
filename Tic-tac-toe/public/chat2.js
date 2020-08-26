@@ -75,7 +75,6 @@ $(function () {
             UpdateMap(data);
             Message("Socket Answer update_Map_", data.map);
             if (data.map.step == 9) {
-                $('.message').html("No one has won");
                 NewGame(data);
             }
         });
@@ -85,9 +84,10 @@ $(function () {
                 lines.visible = true; //grid
                 loading.remove(); //circle
                 Message("Socket Answer start_Map_", data.map);
-                if (data.map.winner) {
+                if (data.map.winner || data.map.step == 9) {
                     NewGame(data);
-                } else {
+                }
+                else {
                     $('#loading').css('visibility', 'hidden'); //text
                     $('.message').html("Game is started");
                     setTimeout(whichMove, 1000, data.map);
@@ -165,7 +165,9 @@ $(function () {
 
     function NewGame(data) {
         Message("User New Game", data.map);
-        if (data.map.winner == idUser) {
+        if (data.map.step == 9) {
+            $('.message').html("No one has won");
+        } else if (data.map.winner == idUser) {
             $('.message').html("You win");
         } else {
             $('.message').html("You lose");

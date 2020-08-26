@@ -179,10 +179,10 @@ $(function () {
         $('#loading').html(
             'Do you want to start a new game or exit? <br>' +
             '<form action="/createServer" method="get">' +
-            '<input type = "submit" value = "New Game" />' +
+                '<input type = "submit" value = "New Game" />' +
             '</form >' +
             '<form action="/" method="get">' +
-            '<input type = "submit" value = "Exit"/>' +
+                '<input type = "submit" value = "Exit"/>' +
             '</form >'
         );
     }

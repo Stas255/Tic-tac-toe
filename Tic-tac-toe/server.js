@@ -82,14 +82,16 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', function (e) {
         var url = socket.handshake.headers.referer;
-        var urlSplit = url.split('/');
-        var idGame = urlSplit[urlSplit.length - 1];
-        Maps.get(idGame).Disconect(socket.id);
-        if (Maps.get(idGame).IsDisconect()) {
-            Maps.delete(idGame);
-            console.log("Game: " + idGame + " is delete");
+        if (/game/.test(url)) {
+            var urlSplit = url.split('/');
+            var idGame = urlSplit[urlSplit.length - 1];
+            Maps.get(idGame).Disconect(socket.id);
+            if (Maps.get(idGame).IsDisconect()) {
+                Maps.delete(idGame);
+                console.log("Game: " + idGame + " is delete");
+            }
+            console.log("user disconnect: " + socket.id);
         }
-        console.log("user disconnect: " + socket.id);
     });
 });
 

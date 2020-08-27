@@ -1,8 +1,8 @@
 $(function () {
 	var socket = io();
-	socket.on('connect', function () {});
-	socket.on('disconnect', () => {
-		socket.emit('rec', socket.id);
+
+	socket.on('message', (data) => {
+		console.log(data);
 	});
 
 	$("#connectServer").click( function () {

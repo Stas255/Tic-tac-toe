@@ -49,6 +49,7 @@ app.post('/GetSessionId', function (req, res) {
 // socket connect 
 io.on('connection', (socket) => {
     console.log("New user connected: " + socket.id);
+    io.sockets.emit('message', "New user connected: " + socket.id);
 
     socket.on('new_user', (data) => {
         if (Maps.has(data.idGame)) {
@@ -76,10 +77,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('rec', function (e) {
-        console.log("New user reconect: " + e);
-    });
-
     socket.on('disconnect', function (e) {
         var url = socket.handshake.headers.referer;
         if (/game/.test(url)) {
@@ -89,10 +86,13 @@ io.on('connection', (socket) => {
             if (Maps.get(idGame).IsDisconect()) {
                 Maps.delete(idGame);
                 console.log("Game: " + idGame + " is delete");
+                io.sockets.emit('message', "Game: " + idGame + " is delete");
             }
             console.log("user disconnect: " + socket.id);
+            io.sockets.emit('message', "user disconnect: " + socket.id);
         }
     });
+
 });
 
 class GameMap {

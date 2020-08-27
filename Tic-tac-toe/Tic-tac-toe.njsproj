@@ -32,11 +32,11 @@
     <Content Include="file.txt" />
     <Content Include="my.html" />
     <Content Include="package-lock.json" />
-    <Content Include="public\chat.js" />
-    <Content Include="public\chat2.js" />
-    <Content Include="public\index.css" />
-    <Content Include="public\index2.css" />
-    <Content Include="public\paper.js" />
+    <Content Include="public\js\chat.js" />
+    <Content Include="public\js\chat2.js" />
+    <Content Include="public\css\index.css" />
+    <Content Include="public\css\index2.css" />
+    <Content Include="public\js\paper.js" />
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />
+    <Folder Include="public\js\" />
+    <Folder Include="public\css\" />
     <Folder Include="views\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
